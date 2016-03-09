@@ -20,15 +20,36 @@ public class Main extends JFrame {
 
 
     public static void main(String[] args) {
-        DataHolder.getInstance().getBoardData()[0] = 1;
-        DataHolder.getInstance().getBoardData()[1] = 2;
-        DataHolder.getInstance().getBoardData()[19] = 2;
-        DataHolder.getInstance().getBoardData()[20 * 19] = 2;
-        DataHolder.getInstance().getBoardData()[20 * 19 + 19] = 1;
+        Player p1 = null;
+        Player p2 = null;
+        try {
+            p1 = new Player("player 1", "dummy.py");
+            p2 = new Player("player 2", "dummy.py");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
-        EventQueue.invokeLater(() -> {
-            Main m = new Main();
-            m.setVisible(true);
-        });
+        try {
+            System.out.println("Send test...");
+            System.out.println(p1.run("test"));
+
+            System.out.println("Send test...");
+            System.out.println(p2.run("test"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+//        DataHolder.getInstance().getBoardData()[0] = 1;
+//        DataHolder.getInstance().getBoardData()[1] = 2;
+//        DataHolder.getInstance().getBoardData()[19] = 2;
+//        DataHolder.getInstance().getBoardData()[20 * 19] = 2;
+//        DataHolder.getInstance().getBoardData()[20 * 19 + 19] = 1;
+//
+//        EventQueue.invokeLater(() -> {
+//            Main m = new Main();
+//            m.setVisible(true);
+//        });
     }
 }
