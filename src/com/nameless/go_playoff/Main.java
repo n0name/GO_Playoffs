@@ -2,6 +2,8 @@ package com.nameless.go_playoff;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main extends JFrame {
 
@@ -19,13 +21,28 @@ public class Main extends JFrame {
     }
 
 
+    public static boolean isValidMove(int x, int y, int player) {
+        // TODO: implement me
+        return true;
+    }
+
+    static Main _main;
+
     public static void main(String[] args) {
 
-        DataHolder.getInstance().getBoardData()[0] = 1;
-        DataHolder.getInstance().getBoardData()[1] = 2;
-        DataHolder.getInstance().getBoardData()[19] = 2;
-        DataHolder.getInstance().getBoardData()[20 * 19] = 2;
-        DataHolder.getInstance().getBoardData()[20 * 19 + 19] = 1;
+//        DataHolder.getInstance().getBoardData()[0] = 1;
+//        DataHolder.getInstance().getBoardData()[1] = 2;
+//        DataHolder.getInstance().getBoardData()[19] = 2;
+//        DataHolder.getInstance().getBoardData()[20 * 19] = 2;
+//        DataHolder.getInstance().getBoardData()[20 * 19 + 19] = 1;
+
+
+        EventQueue.invokeLater(() -> {
+            _main = new Main();
+            _main.setVisible(true);
+        });
+
+        Pattern result_pattern = Pattern.compile("(\\d+) (\\d+)");
 
         Player p1;
         Player p2;
@@ -38,11 +55,58 @@ public class Main extends JFrame {
         }
 
         try {
-            System.out.println("Send board...");
-            System.out.println(p1.run(DataHolder.getInstance().printBoard()));
+            boolean p1_turn = true;
+            String last_result = "";
+            while (true) {
+                String result;
+                if (p1_turn) {
+                    result = p1.run(DataHolder.getInstance().printBoard());
+                } else  {
+                    result = p2.run(DataHolder.getInstance().printBoard());
+                }
 
-//            System.out.println("Send test...");
-//            System.out.println(p2.run("test"));
+
+                if (result.equals("pass") ) {
+                    if (last_result.equals("pass")) {
+                        System.err.println("Game Over");
+                        break;
+                    }
+                    last_result = result;
+                    continue;
+                }
+
+                Matcher m = result_pattern.matcher(result.trim());
+                if (!m.matches()) {
+                    if (p1_turn)
+                        System.err.println("Player1: invalid output -> " + result);
+                    else
+                        System.err.println("Player2: invalid output -> " + result);
+                    break;
+                }
+
+                int x = Integer.parseInt(m.group(1));
+                int y = Integer.parseInt(m.group(2));
+
+                if (isValidMove(x, y, p1_turn ? 1 : 2)) {
+                    DataHolder.getInstance().applyMove(x, y, p1_turn ? 1 : 2);
+
+                }
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (_main != null) {
+                    _main.repaint();
+                }
+                last_result = result;
+                p1_turn = !p1_turn;
+
+            }
+
+
         } catch (Player.TimeoutException e) {
             System.out.println("player: " + e.getPlayerName() + " timed out !");
             if (p1.getName().equals(e.getPlayerName())) {
@@ -55,11 +119,5 @@ public class Main extends JFrame {
         p1.killProcess();
         p2.killProcess();
 
-
-//
-//        EventQueue.invokeLater(() -> {
-//            Main m = new Main();
-//            m.setVisible(true);
-//        });
     }
 }

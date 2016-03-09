@@ -1,12 +1,33 @@
 import sys
-from time import sleep
+import random
 
-print("process started", file=sys.stderr)
 
 while True:
+    grid = []
+    possible = False
     for n in range(20):
         line = input()
-        print("received: ", line, file=sys.stderr)
+        row = list(map(int, line.split()))
+        if row.count(0) != 0:
+            possible = True
+        grid.append(row)
 
-    print("0 0")
+    if not possible:
+        print("not possible", file=sys.stderr)
+        print("pass")
+        continue
+
+    #if random.randint(0, 100) < 30:
+    if False:
+        print("pass")
+        continue
+    else:
+
+        x = random.randint(0, 19)
+        y = random.randint(0, 19)
+        while grid[y][x] != 0:
+            x = random.randint(0, 19)
+            y = random.randint(0, 19)
+        
+        print("{} {}".format(x, y))
 
