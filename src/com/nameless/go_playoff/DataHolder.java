@@ -8,4 +8,15 @@ public class DataHolder {
     private int boardData[] = new int[20 * 20];
 
     public int[] getBoardData() { return boardData; }
+
+    public String printBoard() {
+        String board = "";
+        for (int i = 0; i < 20; i ++ ) {
+            for (int j = 0; j < 19; j++) {
+                board += String.valueOf(boardData[i * 20 + j]) + " ";
+            }
+            board += String.valueOf(boardData[i * 20 + 19]) + "\n";
+        }
+        return board;
+    }
 }

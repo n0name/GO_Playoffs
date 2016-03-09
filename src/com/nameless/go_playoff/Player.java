@@ -29,13 +29,22 @@ public class Player {
     }
 
     public class TimeoutException extends Exception {
+        private String playerName;
 
+        TimeoutException(String name) {
+            playerName = name;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
     }
 
     private String name;
     private PlayerTypes type;
 
     private Process process;
+    private boolean timedOut = false;
 
 
     public Player(String name, String file_name) throws Exception {
@@ -81,7 +90,6 @@ public class Player {
 
     }
 
-    private boolean timedOut = false;
 
     public String run(String input) throws TimeoutException {
         try {
@@ -97,7 +105,7 @@ public class Player {
                 }
             }, 1000);
 
-            input += "\n";
+//            input += "\n";
             BufferedWriter os = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             os.write(input);
             os.flush();
@@ -109,7 +117,7 @@ public class Player {
             timeoutTimer.cancel();
             synchronized (this) {
                 if (timedOut || result == null) {
-                    throw new TimeoutException();
+                    throw new TimeoutException(this.name);
                 }
             }
             return result;
@@ -120,7 +128,9 @@ public class Player {
     }
 
     public void killProcess() {
-        this.process.destroyForcibly();
+        if (this.process.isAlive()) {
+            this.process.destroyForcibly();
+        }
     }
 
 
