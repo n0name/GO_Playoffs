@@ -117,6 +117,7 @@ public class DataHolder {
         }
 
         boardAfter[y * 20 + x] = 0;
+        capturedStones[player] += 1;
 
         if (x > 0) removeAndCheckNext(x - 1, y, player, boardAfter); // left
         if (x < 19) removeAndCheckNext(x + 1, y, player, boardAfter); // right
