@@ -21,11 +21,6 @@ public class Main extends JFrame {
     }
 
 
-    public static boolean isValidMove(int x, int y, int player) {
-        // TODO: implement me
-        return true;
-    }
-
     static Main _main;
 
     public static void main(String[] args) {
@@ -61,12 +56,12 @@ public class Main extends JFrame {
                 String result;
                 if (p1_turn) {
                     result = p1.run(DataHolder.getInstance().printBoard());
-                } else  {
+                } else {
                     result = p2.run(DataHolder.getInstance().printBoard());
                 }
 
 
-                if (result.equals("pass") ) {
+                if (result.equals("pass")) {
                     if (last_result.equals("pass")) {
                         System.err.println("Game Over");
                         break;
@@ -87,9 +82,12 @@ public class Main extends JFrame {
                 int x = Integer.parseInt(m.group(1));
                 int y = Integer.parseInt(m.group(2));
 
-                if (isValidMove(x, y, p1_turn ? 1 : 2)) {
-                    DataHolder.getInstance().applyMove(x, y, p1_turn ? 1 : 2);
-
+                if (!DataHolder.getInstance().doMove(x, y, p1_turn ? 1 : 2)) {
+                    if (p1_turn)
+                        System.err.println("Player1: invalid move -> " + result);
+                    else
+                        System.err.println("Player2: invalid move -> " + result);
+                    break;
                 }
 
                 try {
